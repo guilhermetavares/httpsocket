@@ -1,7 +1,8 @@
 HTTPSOCKET
 ----------
 
-2) Using Python or C++, provide a single file program that:
+Using Python or C++, provide a single file program that:
+
 a. Accepts an HTTP connection
 b. Parses the HTTP connection data
 c. If the HTTP requests the enpoint '/ws', the program will upgrade the connection to WebSocket
@@ -10,6 +11,8 @@ d. Send the following JSON through the WebSocket '{ "status" : "success" }'
 
 Initial
 -------
+
+This projects it`s developing using a ``python-3.5.2``
 
 Create a socket class ``SocketHttp``, passing a full url ex ``ws://echo.websocket.org/`` for the socket connection:
     
@@ -64,3 +67,10 @@ To send data, just call the method ``send``:
 	
 	>>> conn.send('{ "status" : "success" }')
 
+
+Close
+-----
+
+To close the socket, just:
+    
+    >>> conn.close()

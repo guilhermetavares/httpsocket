@@ -2,6 +2,7 @@ HTTPSOCKET
 ----------
 
 2) Using Python or C++, provide a single file program that:
+
 a. Accepts an HTTP connection
 b. Parses the HTTP connection data
 c. If the HTTP requests the enpoint '/ws', the program will upgrade the connection to WebSocket

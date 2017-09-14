@@ -2,6 +2,7 @@ import socket
 import base64
 import re
 import uuid
+
 from urllib.parse import urlparse
 
 
@@ -23,8 +24,7 @@ class SocketHttp(object):
         return False
     
     def send(self, data):
-        data = str(data)
-        return self.mysocket.send(bytes(data, 'utf-8'))
+        return self.mysocket.send(bytes(str(data), 'utf-8'))
         
     def upgrade(self):
         KEY = base64.encodebytes(uuid.uuid4().bytes)
@@ -68,16 +68,19 @@ class SocketHttp(object):
             return ''
         
     def _format_header(self, headers):
-        data = dict()
+        header = dict()
         for item in headers:
             if item:
-                key, value = re.split(": ", item)
-                data[key] = value
-        return data
+                try:
+                    key, value = re.split(": ", item)
+                except ValueError:
+                    continue
+                header[key] = value
+        return header
         
     def _connect(self):
-        info = socket.getaddrinfo(self.url_parse.netloc, 80, 0, 0, socket.SOL_TCP)[0]
-        family, kind, address = info[0], info[1], info[4]
+        addrinfo = socket.getaddrinfo(self.url_parse.netloc, 80, 0, 0, socket.SOL_TCP)[0]
+        family, kind, address = addrinfo[0], addrinfo[1], addrinfo[4]
         mysocket = socket.socket(family, kind)
         # TODO: make setsockopt optionals
         mysocket.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
@@ -102,9 +105,9 @@ class SocketHttp(object):
     
     def _response(self):
         response = ''
+
         while True:
             chunk = self.mysocket.recv(65536)
-            print(chunk)
             if len(chunk) == 0:
                 break
             else:
